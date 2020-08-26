@@ -79,7 +79,7 @@ class Roster(object):
         pdf = pdfkit.from_string(html, False, options=options)
         return BytesIO(pdf)
 
-    def get_pdf(self):
+    async def get_pdf(self):
         xml = self.read_xml()
         game_system = self.get_game_system(xml)
         xsl = Roster.stylesheets.get(game_system)
