@@ -12,26 +12,41 @@ log.addHandler(file_handler)
 class Bot(discord.Client):
 
     async def on_ready(self):
-        log.info('Logged in as {user}'.format(user=self.user))
+        log.info('Connected as {user}'.format(user=self.user))
 
     async def on_message(self, message):
+        author = message.author
         if message.author == self.user:
             return
         for attachment in message.attachments:
             if attachment.filename.endswith('.rosz'):
-                log.info('PDF Requested by {author.name} ({author.guild})'.format(
-                    author=message.author
+                try:
+                    guild = author.guild
+                except AttributeError:
+                    guild = 'Direct Message'
+                log.info('PDF Requested by {author.name} ({guild})'.format(
+                    author=author,
+                    guild=guild,
                 ))
                 roster = Roster(attachment.filename, attachment.url)
-                name, pdf = roster.get_pdf()
-                content = '{mention}, here is your printable roster!'.format(
-                    mention=message.author.mention
-                )
-                pdf_file = discord.File(fp=pdf, filename=name)
-                await message.channel.send(
-                    content=content,
-                    file=pdf_file,
-                )
+                try:
+                    name, pdf = await roster.get_pdf()
+                    content = '{mention}, here is your printable roster!'.format(
+                        mention=message.author.mention
+                    )
+                    pdf_file = discord.File(fp=pdf, filename=name)
+                    await message.channel.send(
+                        content=content,
+                        file=pdf_file,
+                    )
+                    log.info('PDF Sent to {author.name} ({guild})'.format(
+                        author=author,
+                        guild=guild,
+                    ))
+                except BotException:
+                    await message.channel.send(
+                        content='An error occurred'
+                    )
 
 
 bot = Bot()
