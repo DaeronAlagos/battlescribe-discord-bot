@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 from io import BytesIO
 import os
+import logging
 from zipfile import ZipFile
 import pdfkit
 from lxml import etree as et
 from requests import get
+from bot import BotException, file_handler
+
+log = logging.getLogger('roster')
+log.addHandler(file_handler)
 
 
 def load_xsl(filename):
@@ -29,14 +34,14 @@ class Roster(object):
     def get_filename_prefix(name):
         if name.endswith('.rosz'):
             return name.rsplit('.', 1)[0]
-        raise Exception('Not a valid roster file')
+        raise BotException('Not a valid roster file')
 
     def read_xml(self):
         file = self.get_file()
         if file:
             content = self.extract_content(file)
             return et.fromstring(content)
-        raise Exception('Failed to read roster data')
+        raise BotException('Failed to read roster data')
 
     @staticmethod
     def extract_content(file):
@@ -45,12 +50,13 @@ class Roster(object):
                 if f.filename.endswith('.ros'):
                     with archive.open('{name}'.format(name=f.filename)) as roster:
                         return roster.read()
+                raise BotException('Failed to read roster data')
 
     def get_file(self):
         result = get(self.url)
         if result.ok:
             return BytesIO(result.content)
-        raise Exception('Failed to download roster')
+        raise BotException('Failed to download roster')
 
     @staticmethod
     def get_game_system(xml):

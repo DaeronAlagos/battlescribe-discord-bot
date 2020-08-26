@@ -2,7 +2,7 @@
 import os
 import logging
 import discord
-from bot import file_handler
+from bot import file_handler, BotException
 from bot.roster import Roster
 
 log = logging.getLogger('bot')

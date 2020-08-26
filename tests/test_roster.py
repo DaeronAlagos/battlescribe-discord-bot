@@ -1,5 +1,6 @@
 import unittest
 from bot.roster import Roster
+from bot import BotException
 
 
 class TestFilenamePrefix(unittest.TestCase):
@@ -21,7 +22,7 @@ class TestFilenamePrefix(unittest.TestCase):
         self.assertNotEqual(name, expected)
 
     def test_suffix_failure(self):
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(BotException) as context:
             self.roster.get_filename_prefix('nametestfail')
 
         self.assertTrue('Not a valid roster file' in str(context.exception))

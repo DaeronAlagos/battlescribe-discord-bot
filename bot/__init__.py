@@ -8,3 +8,7 @@ file_handler = handlers.RotatingFileHandler(
 )
 file_handler.setFormatter(log_format)
 logging.basicConfig(level=logging.INFO)
+
+
+class BotException(Exception):
+    pass
