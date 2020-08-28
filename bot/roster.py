@@ -60,7 +60,6 @@ class Roster(object):
 
     @staticmethod
     def get_game_system(xml):
-        # root = et.fromstring(xml)
         return xml.get('gameSystemName')
 
     @staticmethod
@@ -76,13 +75,18 @@ class Roster(object):
             'disable-smart-shrinking': None,
             'print-media-type': None,
         }
-        pdf = pdfkit.from_string(html, False, options=options)
-        return BytesIO(pdf)
+        try:
+            pdf = pdfkit.from_string(html, False, options=options)
+            return BytesIO(pdf)
+        except TypeError:
+            raise BotException('An error occurred when converting to pdf')
 
     async def get_pdf(self):
         xml = self.read_xml()
         game_system = self.get_game_system(xml)
         xsl = Roster.stylesheets.get(game_system)
+        if not xsl:
+            raise BotException('Sorry, this game system is unsupported')
         html = self.transform(xsl, xml)
         pdf_buffer = self.create_pdf(html)
         return '{prefix}.pdf'.format(prefix=self.name), pdf_buffer

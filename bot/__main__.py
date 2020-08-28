@@ -18,7 +18,7 @@ class Bot(discord.Client):
 
     async def on_message(self, message):
         author = message.author
-        if message.author == self.user:
+        if author == self.user:
             return
         for attachment in message.attachments:
             if attachment.filename.endswith('.rosz'):
@@ -33,8 +33,8 @@ class Bot(discord.Client):
                 roster = Roster(attachment.filename, attachment.url)
                 try:
                     name, pdf = await roster.get_pdf()
-                    content = '{mention}, here is your printable roster!'.format(
-                        mention=message.author.mention
+                    content = '{mention} here is your printable roster!'.format(
+                        mention=author.mention
                     )
                     pdf_file = discord.File(fp=pdf, filename=name)
                     await message.channel.send(
@@ -45,9 +45,12 @@ class Bot(discord.Client):
                         author=author,
                         guild=guild,
                     ))
-                except BotException:
+                except BotException as e:
                     await message.channel.send(
-                        content='An error occurred'
+                        content='{mention} {exception}'.format(
+                            mention=author.mention,
+                            exception=e,
+                        ),
                     )
 
 
