@@ -24,6 +24,7 @@ class Roster(object):
 
     stylesheets = {
         'Warhammer 40,000: Kill Team (2018)': load_xsl('kill-team.xsl'),
+        'Warcaster: Neo-Mechanika': load_xsl('warcaster.xsl'),
     }
 
     def __init__(self, name, url):
