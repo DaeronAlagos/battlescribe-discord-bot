@@ -61,7 +61,10 @@ class Roster(object):
 
     @staticmethod
     def get_game_system(xml):
-        return xml.get('gameSystemName')
+        name = xml.get('gameSystemName')
+        if not name:
+            raise BotException('Unable to determine Game System')
+        return name
 
     @staticmethod
     def transform(xsl, xml):
