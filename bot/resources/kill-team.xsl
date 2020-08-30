@@ -7,7 +7,7 @@
     
     <xsl:variable name="specialisms" select="'Leader|Combat|Zealot|Demolitions|Comms|Veteran|Scout|Heavy|Medic|Sniper|Strength|Strategist'"/>
 		<xsl:variable name="advances" select="'1. Fleet|2. Lucky|3. Courageous|4. Skilled|5. Lethal|6. Die-hard'"/>
-		<xsl:variable name="levels" select="'Level 1|Level 2|Level 3|Level 4'"/>
+		<xsl:variable name="levels" select="'Level 1|Level 2|Level 3|Level 4|Fly'"/>
 
 	<xsl:template match="bs:roster/bs:forces/bs:force">
 		<xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
