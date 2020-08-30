@@ -7,4 +7,5 @@ services:
     volumes:
     - ./logs:/bot/logs
     environment:
+      TZ: "Europe/London"
       TOKEN: ${TOKEN}
